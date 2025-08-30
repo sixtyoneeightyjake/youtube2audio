@@ -1,7 +1,7 @@
 import re
 import urllib
 
-import youtube_dl
+import yt_dlp
 from pytube import Playlist
 from utils._threading import map_threads
 
@@ -56,11 +56,11 @@ def get_video_info(args):
         ydl_opts = {"ignoreerrors": True, "quiet": True}
 
     try:
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             video_info = ydl.extract_info(video_url, download=False)
         return video_info
     # video unavailable or bad url format
-    except (youtube_dl.utils.DownloadError, UnicodeError) as error:
+    except (yt_dlp.utils.DownloadError, UnicodeError) as error:
         # catch exception here and process error:
         # either load content again or post error label.
         raise RuntimeError(error)

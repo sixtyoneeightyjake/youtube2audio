@@ -1,9 +1,10 @@
+streamlit>=1.28.0
 itunespy==1.5.5
 moviepy==1.0.3
 mutagen
-PyQt5
 pytube
 pytubefix
-QDarkStyle
 requests
-youtube-dl==2020.12.14
+yt-dlp
+pandas
+Pillow

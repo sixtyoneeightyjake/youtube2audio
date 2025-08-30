@@ -1,8 +1,11 @@
-# **youtube2audio**
+# **sixtyoneeighty YouTube to MP3 Converter**
 
 ![Version](https://img.shields.io/badge/version-v2024.09.26-orange)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/irahorecka/youtube2audio/main/LICENSE)
+
+> **🎵 NEW: Streamlit Web Version Available!**  
+> For a modern, web-based experience without PyQt5 dependencies, check out `README_STREAMLIT.md` and use `streamlit_app.py`
 
 A desktop GUI application to download YouTube videos as annotated MP3 or MP4 files.
 <br>
@@ -21,6 +24,13 @@ Watch the <a href="https://i.imgur.com/6gAdznH.mp4">video demo</a> for more info
 
 ## Running the application
 
+### Option 1: Streamlit Web Version (Recommended)
+1) Clone GitHub repository
+2) ```python3 -m venv venv && source venv/bin/activate```
+3) ```pip install -r requirements.txt```
+4) ```streamlit run streamlit_app.py```
+
+### Option 2: Original PyQt5 Desktop Version
 1) Clone GitHub repository
 2) ```pip install -r requirements.txt --upgrade```
 3) ```python main.py```
