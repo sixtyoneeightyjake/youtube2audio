@@ -21,6 +21,104 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Custom CSS for modern styling
+st.markdown("""
+<style>
+    /* Hide Streamlit branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Main container styling */
+    .main .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 1200px;
+    }
+    
+    /* Custom title styling */
+    .main-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+        color: #6b7280;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    /* Section headers */
+    .section-header {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #374151;
+        margin: 2rem 0 1rem 0;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 0.5rem;
+    }
+    
+    /* Card-like containers */
+    .video-card {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        transition: all 0.2s ease;
+    }
+    
+    .video-card:hover {
+        background: #f3f4f6;
+        border-color: #d1d5db;
+    }
+    
+    /* Button styling */
+    .stButton > button {
+        border-radius: 6px;
+        border: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+    
+    /* Input styling */
+    .stTextInput > div > div > input {
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+    }
+    
+    /* Sidebar styling */
+    .css-1d391kg {
+        background-color: #f8fafc;
+    }
+    
+    /* Progress bar styling */
+    .stProgress > div > div > div {
+        background-color: #3b82f6;
+    }
+    
+    /* Video info styling */
+    .video-info {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+    }
+    
+    .video-title {
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # Initialize session state
 if 'videos_dict' not in st.session_state:
     st.session_state.videos_dict = {}
@@ -171,37 +269,37 @@ def create_zip_download(files):
     return zip_buffer.getvalue()
 
 # Main UI
-st.title("🎵 sixtyoneeighty YouTube to MP3 Converter - for Wheeler")
-st.markdown("Convert YouTube videos and playlists to high-quality MP3 files")
+st.markdown('<h1 class="main-title">sixtyoneeighty - youtube to mp3 converter</h1>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">(made for Wheeler)</p>', unsafe_allow_html=True)
 
 # Sidebar for settings
 with st.sidebar:
-    st.header("⚙️ Settings")
+    st.markdown('<h3 class="section-header">Settings</h3>', unsafe_allow_html=True)
     save_as_mp4 = st.checkbox("Save as MP4/M4A", value=False, help="Save as MP4/M4A instead of MP3")
     use_itunes = st.checkbox("Fetch iTunes Metadata", value=True, help="Automatically fetch artist, album, and genre information")
     
-    st.header("📖 Instructions")
+    st.markdown('<h3 class="section-header">How to Use</h3>', unsafe_allow_html=True)
     st.markdown("""
-    1. Enter a YouTube video or playlist URL
-    2. Click 'Load Videos' to fetch video information
-    3. Optionally annotate with iTunes metadata
-    4. Select videos to download
-    5. Click 'Download Selected' to convert to MP3
+    **1.** Enter a YouTube video or playlist URL  
+    **2.** Click 'Load Videos' to fetch information  
+    **3.** Optionally annotate with iTunes metadata  
+    **4.** Select videos to download  
+    **5.** Click 'Download Selected' to convert  
     """)
 
 # URL input section
-st.header("🔗 Enter YouTube URL")
+st.markdown('<h2 class="section-header">Enter YouTube URL</h2>', unsafe_allow_html=True)
 col1, col2 = st.columns([4, 1])
 
 with col1:
     url_input = st.text_input(
         "YouTube Video or Playlist URL",
-        placeholder="https://www.youtube.com/watch?v=..",
+        placeholder="https://www.youtube.com/watch?v=... or playlist URL",
         label_visibility="collapsed"
     )
 
 with col2:
-    load_button = st.button("Load Videos", type="primary", width="stretch")
+    load_button = st.button("Load Videos", type="primary", use_container_width=True)
 
 # Load videos when button is clicked
 if load_button and url_input:
@@ -213,63 +311,68 @@ if load_button and url_input:
 
 # Display videos table if videos are loaded
 if st.session_state.videos_dict:
-    st.header("📹 Loaded Videos")
+    st.markdown('<h2 class="section-header">Loaded Videos</h2>', unsafe_allow_html=True)
     
     # iTunes annotation button
     if use_itunes:
-        if st.button("🎼 Annotate with iTunes Metadata"):
+        if st.button("Annotate with iTunes Metadata", use_container_width=False):
             st.session_state.videos_dict = annotate_with_itunes(st.session_state.videos_dict)
             st.success("iTunes metadata added!")
     
     # Display videos with individual selection checkboxes
     for title, info in st.session_state.videos_dict.items():
-        col1, col2 = st.columns([0.1, 0.9])
-        
-        with col1:
-            is_selected = st.checkbox(
-                "",
-                value=title in st.session_state.selected_videos,
-                key=f"select_{title}",
-                label_visibility="collapsed"
-            )
+        # Create a card-like container
+        with st.container():
+            col1, col2 = st.columns([0.08, 0.92])
             
-            if is_selected and title not in st.session_state.selected_videos:
-                st.session_state.selected_videos.add(title)
-            elif not is_selected and title in st.session_state.selected_videos:
-                st.session_state.selected_videos.remove(title)
+            with col1:
+                is_selected = st.checkbox(
+                    "",
+                    value=title in st.session_state.selected_videos,
+                    key=f"select_{title}",
+                    label_visibility="collapsed"
+                )
+                
+                if is_selected and title not in st.session_state.selected_videos:
+                    st.session_state.selected_videos.add(title)
+                elif not is_selected and title in st.session_state.selected_videos:
+                    st.session_state.selected_videos.remove(title)
+            
+            with col2:
+                st.markdown(f'<div class="video-title">{title}</div>', unsafe_allow_html=True)
+                
+                # Video info in a clean layout
+                info_col1, info_col2, info_col3, info_col4 = st.columns(4)
+                with info_col1:
+                    st.markdown(f"**Duration:** {format_duration(info.get('duration'))}")
+                with info_col2:
+                    st.markdown(f"**Artist:** {info.get('artist', 'Unknown')}")
+                with info_col3:
+                    st.markdown(f"**Album:** {info.get('album', 'Unknown')}")
+                with info_col4:
+                    st.markdown(f"**Genre:** {info.get('genre', 'Unknown')}")
         
-        with col2:
-            st.markdown(f"**{title}**")
-            col_info1, col_info2, col_info3, col_info4 = st.columns(4)
-            with col_info1:
-                st.caption(f"⏱️ {format_duration(info.get('duration'))}")
-            with col_info2:
-                st.caption(f"🎤 {info.get('artist', 'Unknown')}")
-            with col_info3:
-                st.caption(f"💿 {info.get('album', 'Unknown')}")
-            with col_info4:
-                st.caption(f"🎵 {info.get('genre', 'Unknown')}")
-        
-        st.markdown("---")
+        st.markdown("<br>", unsafe_allow_html=True)
     
     # Selection and download section
+    st.markdown("<br>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([2, 2, 2])
     
     with col1:
-        if st.button("Select All", width="stretch"):
+        if st.button("Select All", use_container_width=True):
             st.session_state.selected_videos = set(st.session_state.videos_dict.keys())
             st.rerun()
     
     with col2:
-        if st.button("Clear Selection", width="stretch"):
+        if st.button("Clear Selection", use_container_width=True):
             st.session_state.selected_videos = set()
             st.rerun()
     
     with col3:
         if not st.session_state.is_downloading:
-            download_button = st.button("🎵 Download Selected", type="primary", width="stretch")
+            download_button = st.button("Download Selected", type="primary", use_container_width=True)
         else:
-            st.button("⏳ Downloading...", disabled=True, width="stretch")
+            st.button("Downloading...", disabled=True, use_container_width=True)
     
     # Download functionality
     if 'download_button' in locals() and download_button:
@@ -285,30 +388,31 @@ if st.session_state.videos_dict:
                 st.success(f"Successfully downloaded {len(downloaded_files)} audio files!")
                 
                 # Create download buttons for individual files
-                st.header("📥 Download Files")
+                st.markdown('<h2 class="section-header">Download Files</h2>', unsafe_allow_html=True)
                 
                 if len(downloaded_files) > 1:
                     # Create ZIP download for multiple files
                     zip_data = create_zip_download(downloaded_files)
                     st.download_button(
-                        label="📦 Download All as ZIP",
+                        label="Download All as ZIP",
                         data=zip_data,
                         file_name="youtube_audio_files.zip",
                         mime="application/zip",
-                        width="stretch"
+                        use_container_width=True
                     )
                     
-                    st.markdown("---")
-                    st.subheader("Individual Downloads")
+                    st.markdown("<br>", unsafe_allow_html=True)
+                    st.markdown("**Individual Downloads**")
+                    st.markdown("<br>", unsafe_allow_html=True)
                 
                 # Individual file downloads
                 for filename, file_data in downloaded_files:
                     st.download_button(
-                    label=f"📄 {filename}",
+                    label=filename,
                     data=file_data,
                     file_name=filename,
                     mime="audio/mpeg" if filename.endswith('.mp3') else "audio/mp4",
-                    width="stretch"
+                    use_container_width=True
                 )
             else:
                 st.error("No files were successfully downloaded.")
@@ -316,9 +420,11 @@ if st.session_state.videos_dict:
             st.warning("Please select at least one video to download.")
 
 # Footer
-st.markdown("---")
+st.markdown("<br><br>", unsafe_allow_html=True)
 st.markdown(
-    "<div style='text-align: center; color: #666;'>Made with ❤️ using Streamlit | "
-    "<a href='https://github.com/irahorecka/YouTube2Mp3' target='_blank'>Source Code</a></div>",
+    "<div style='text-align: center; color: #9ca3af; font-size: 0.9rem; padding: 2rem 0; border-top: 1px solid #e5e7eb; margin-top: 3rem;'>"
+    "sixtyoneeighty - youtube to mp3 converter (made for Wheeler) | "
+    "<a href='https://github.com/irahorecka/YouTube2Mp3' target='_blank' style='color: #6366f1; text-decoration: none;'>View Source</a>"
+    "</div>",
     unsafe_allow_html=True
 )

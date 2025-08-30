@@ -39,7 +39,7 @@ class MainPage(QMainWindow, UiMainWindow):
         self.revert_annotate.hide()
         # Activate hyperlink on upper right
         self.credit_url.linkActivated.connect(self.set_credit_url)
-        self.credit_url.setText('<a href="https://github.com/irahorecka/YouTube2Mp3">source code</a>')
+        self.credit_url.setText('<a href="https://github.com/sixtyoneeightyjake/youtube2audio">source code</a>')
         # Connect the delete video button with the remove_selected_items fn.
         self.remove_from_table_button.clicked.connect(self.remove_selected_items)
         # Buttons connection with the appropriate functions
