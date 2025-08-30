@@ -15,7 +15,7 @@ from utils.query_itunes import get_itunes_metadata, query_itunes
 
 # Page configuration
 st.set_page_config(
-    page_title="sixtyoneeighty YouTube to MP3 Converter",
+    page_title="YouTube to Audio Converter - for Wheeler",
     page_icon="🎵",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -171,7 +171,7 @@ def create_zip_download(files):
     return zip_buffer.getvalue()
 
 # Main UI
-st.title("🎵 sixtyoneeighty YouTube to MP3 Converter")
+st.title("🎵 sixtyoneeighty YouTube to MP3 Converter - for Wheeler")
 st.markdown("Convert YouTube videos and playlists to high-quality MP3 files")
 
 # Sidebar for settings
